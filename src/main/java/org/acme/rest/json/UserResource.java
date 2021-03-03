@@ -26,10 +26,11 @@ public class UserResource {
 
     public UserResource() {
         Users.add(new User("mohamad", "hlal"));
-        //Users.add(new User("ella", "ali"));
     }
 
     @GET
+	@Produces(MediaType.APPLICATION_JSON)
+
     public List<User> list() {
         return Users;
     }
@@ -47,7 +48,7 @@ public class UserResource {
         Users.add(user);
     }
 
-    
+    //need change to send a User object json instead of sending the password in the header
 	@GET
 	@Path("/check/{username}")
 	@Produces(MediaType.TEXT_PLAIN)
