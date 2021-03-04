@@ -75,12 +75,11 @@ public class UserResource {
 			if(user1.username.equals(username)) {
 				if(user1.password.equals(password))
 					login = "success";
-					user = user1;
-					break;
+				List<Device> UserBLEDevices = userPermissions.get(user);
+				return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();			
 			}
 		}
-		List<Device> UserBLEDevices = userPermissions.get(user);
-		return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
+		return Response.ok(null, MediaType.APPLICATION_JSON).build();
 	}
 	
     //authorized devices
