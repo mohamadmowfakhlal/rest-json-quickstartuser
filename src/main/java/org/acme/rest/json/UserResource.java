@@ -2,6 +2,7 @@ package org.acme.rest.json;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -23,14 +24,29 @@ public class UserResource {
 
     //private Set<User> Users = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap<>()));
     private List<User> Users = new ArrayList<User>();
+    private List<Device> BLEDevices = new ArrayList<Device>();    
+	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
 
     public UserResource() {
-        Users.add(new User("mohamad", "hlal"));
+    	User test = new User("mohamad", "hlal");
+        Users.add(test);
+        
+        Device frontdoor = new Device("front","1234");
+        Device backdoor = new Device("back","5678");
+        
+        BLEDevices.add(frontdoor);
+        BLEDevices.add(backdoor);
+        
+        
+         List<Device> testUserDevices = new ArrayList<Device>(); 
+         testUserDevices.add(frontdoor);
+         testUserDevices.add(backdoor);
+         userPermissions.put(test, testUserDevices);
+     
     }
 
     @GET
 	@Produces(MediaType.APPLICATION_JSON)
-
     public List<User> list() {
         return Users;
     }
@@ -50,9 +66,28 @@ public class UserResource {
 
     //need change to send a User object json instead of sending the password in the header
 	@GET
+	@Path("/checkauthorizatation/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response request(@PathParam("username") String username, @QueryParam("password") String password) {
+		String login = "failed";
+		User user = new User();
+		for(final User user1 : Users) {
+			if(user1.username.equals(username)) {
+				if(user1.password.equals(password))
+					login = "success";
+					user = user1;
+					break;
+			}
+		}
+		List<Device> UserBLEDevices = userPermissions.get(user);
+		return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
+	}
+	
+    //authorized devices
+	@GET
 	@Path("/check/{username}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response request(@PathParam("username") String username, @QueryParam("password") String password) {
+	public Response requestauthorize(@PathParam("username") String username, @QueryParam("password") String password) {
 		String login = "failed";
 		for(final User user1 : Users) {
 			if(user1.username.equals(username)) {
@@ -61,9 +96,11 @@ public class UserResource {
 					break;
 			}
 		}
+		
 		return Response.ok(login, MediaType.TEXT_PLAIN).build();
 
 	}
+	
 	
     @DELETE
     public List<User> delete(User user) {
