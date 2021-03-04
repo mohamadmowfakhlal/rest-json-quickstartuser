@@ -70,13 +70,14 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response request(@PathParam("username") String username, @QueryParam("password") String password) {
 		String login = "failed";
-		User user = new User();
+		//User user = new User();
 		for(final User user1 : Users) {
 			if(user1.username.equals(username)) {
-				if(user1.password.equals(password))
+				if(user1.password.equals(password)) {
 					login = "success";
-				List<Device> UserBLEDevices = userPermissions.get(user);
-				return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();			
+				List<Device> UserBLEDevices = userPermissions.get(user1);
+				return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();	
+				}
 			}
 		}
 		return Response.ok(null, MediaType.APPLICATION_JSON).build();
