@@ -31,16 +31,27 @@ public class UserResource {
     	User test = new User("mohamad", "hlal");
         Users.add(test);
         
-        Device frontdoor = new Device("front","1234");
-        Device backdoor = new Device("back","5678");
+        Device frontdoor1 = new Device("frontdoor","19:11:CA:5A:8B:44");
+        Device backdoor1 = new Device("backdoor","19:44:C6:9B:95:44");
+        Device frontdoor2 = new Device("frontdoor","19:11:CA:5A:8B:44");
+        Device backdoor2 = new Device("backdoor","19:44:C6:9B:95:44");
+        Device frontdoor3 = new Device("frontdoor","19:11:CA:5A:8B:44");
+        Device backdoor3 = new Device("backdoor","19:44:C6:9B:95:44");
         
-        BLEDevices.add(frontdoor);
-        BLEDevices.add(backdoor);
-        
+        BLEDevices.add(frontdoor1);
+        BLEDevices.add(backdoor1);
+        BLEDevices.add(frontdoor2);
+        BLEDevices.add(backdoor2);
+        BLEDevices.add(frontdoor3);
+        BLEDevices.add(backdoor3);
         
          List<Device> testUserDevices = new ArrayList<Device>(); 
-         testUserDevices.add(frontdoor);
-         testUserDevices.add(backdoor);
+         testUserDevices.add(frontdoor1);
+         testUserDevices.add(backdoor1);
+         testUserDevices.add(frontdoor2);
+         testUserDevices.add(backdoor2);
+         testUserDevices.add(frontdoor3);
+         testUserDevices.add(backdoor3);
          userPermissions.put(test, testUserDevices);
      
     }
