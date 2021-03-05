@@ -31,12 +31,12 @@ public class UserResource {
     	User test = new User("mohamad", "hlal");
         Users.add(test);
         
-        Device frontdoor1 = new Device("frontdoor","19:11:CA:5A:8B:44");
-        Device backdoor1 = new Device("backdoor","19:44:C6:9B:95:44");
-        Device frontdoor2 = new Device("frontdoor","19:11:CA:5A:8B:44");
-        Device backdoor2 = new Device("backdoor","19:44:C6:9B:95:44");
-        Device frontdoor3 = new Device("frontdoor","19:11:CA:5A:8B:44");
-        Device backdoor3 = new Device("backdoor","19:44:C6:9B:95:44");
+        Device frontdoor1 = new Device("frontdoorlock","19:11:CA:5A:8B:44");
+        Device backdoor1 = new Device("backdoolockr","19:44:C6:9B:95:44");
+        Device frontdoor2 = new Device("temperture","19:11:CA:5A:8B:44");
+        Device backdoor2 = new Device("labsdoor","19:44:C6:9B:95:44");
+        Device frontdoor3 = new Device("kitchendoor","19:11:CA:5A:8B:44");
+        Device backdoor3 = new Device("lightbulb","19:44:C6:9B:95:44");
         
         BLEDevices.add(frontdoor1);
         BLEDevices.add(backdoor1);
