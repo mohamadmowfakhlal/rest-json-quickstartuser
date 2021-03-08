@@ -1,6 +1,7 @@
 package org.acme.rest.json;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,14 +20,17 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/users")
+@Path("/")
 public class UserResource {
 
     //private Set<User> Users = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap<>()));
     private List<User> Users = new ArrayList<User>();
+    //All device in the system
     private List<Device> BLEDevices = new ArrayList<Device>();    
+    //binding between the user and a list of devices
 	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
-
+	//binding between the device and the symmetric key that used as a secret between the server and device
+	private HashMap<Device,String> deviceKey = new HashMap<Device,String>();
     public UserResource() {
     	User test = new User("mohamad", "hlal");
         Users.add(test);
@@ -55,7 +59,7 @@ public class UserResource {
          userPermissions.put(test, testUserDevices);
      
     }
-
+    @Path("/users")
     @GET
 	@Produces(MediaType.APPLICATION_JSON)
     public List<User> list() {
@@ -69,6 +73,7 @@ public class UserResource {
     }
     */
     //@Produces(MediaType.APPLICATION_JSON)
+    @Path("/users")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public void add(User user) {
@@ -76,6 +81,7 @@ public class UserResource {
     }
 
     //need change to send a User object json instead of sending the password in the header
+    
 	@GET
 	@Path("/checkauthorizatation/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -118,5 +124,40 @@ public class UserResource {
     public List<User> delete(User user) {
         Users.removeIf(existingUser -> existingUser.username.contentEquals(user.username));
         return Users;
+    }
+    
+    @Path("/key/{key}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public void add(Device device,@PathParam("key") String key) {
+       	BLEDevices.add(device);
+    	deviceKey.put(device, key);
+    }
+    
+    @Path("/keys")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public Collection<String> getKeys() {
+    	return deviceKey.values();
+    }
+    
+    @Path("/token")
+    @Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public String getToken(Data data,@QueryParam("MAC") String MAC) {
+    	System.out.print("Hello"+data.getCNonce()+data.getSNonce());
+
+    	//define a class that does a decryption
+    	String key = "2222111133334444";
+		for(final Device device : BLEDevices) {
+			if(device.MAC.equals(MAC)) {
+				key = deviceKey.get(device);
+					break;
+			}
+    }
+    	AES aes = new AES();
+    	return aes.encrypt(data.getCNonce(),key);
+		//return key;
     }
 }
