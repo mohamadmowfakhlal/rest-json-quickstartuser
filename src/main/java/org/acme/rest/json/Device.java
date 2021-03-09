@@ -7,8 +7,17 @@ public class Device {
 
     public String deviceID;
     public String MAC;
+    public String Key;
 
-    public Device() {
+    public String getKey() {
+		return Key;
+	}
+
+	public void setKey(String key) {
+		Key = key;
+	}
+
+	public Device() {
     }
 
     public Device(String deviceID, String MAC) {

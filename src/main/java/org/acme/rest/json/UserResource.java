@@ -126,12 +126,12 @@ public class UserResource {
         return Users;
     }
     
-    @Path("/key/{key}")
+    @Path("/keys")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public void add(Device device,@PathParam("key") String key) {
+    public void add(Device device) {
        	BLEDevices.add(device);
-    	deviceKey.put(device, key);
+    	deviceKey.put(device, device.getKey());
     }
     
     @Path("/keys")
@@ -142,22 +142,27 @@ public class UserResource {
     }
     
     @Path("/token")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public String getToken(Data data,@QueryParam("MAC") String MAC) {
-    	System.out.print("Hello"+data.getCNonce()+data.getSNonce());
-
+    public HashMap<String,String> decryptNonces(Nonces data) {
+    	//System.out.print("Hi"+data.getCNonce()+data.getSNonce()+data.getMAC());
     	//define a class that does a decryption
-    	String key = "2222111133334444";
-		for(final Device device : BLEDevices) {
-			if(device.MAC.equals(MAC)) {
+    	String key = "";
+    	HashMap<String,String> decryptedNonces=new HashMap<String,String>() ;
+		for(Device device : BLEDevices) {
+			//System.out.print("MAC" + data.getMAC());
+
+			if(device.MAC.equals(data.getMAC())){
 				key = deviceKey.get(device);
+				//System.out.print("key"+key);
 					break;
 			}
-    }
+		}
+		
     	AES aes = new AES();
-    	return aes.encrypt(data.getCNonce(),key);
-		//return key;
+    	decryptedNonces.put("CNonce", aes.decrypt(data.getCNonce(),key));
+    	decryptedNonces.put( "SNonce",aes.decrypt(data.getSNonce(),key));    	
+    	return decryptedNonces;
     }
 }

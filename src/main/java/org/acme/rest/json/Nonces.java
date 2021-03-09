@@ -1,8 +1,9 @@
 package org.acme.rest.json;
 
-public class Data {
+public class Nonces {
 public String CNonce;
 public String SNonce;
+public String MAC;
 public String getCNonce() {
 	return CNonce;
 }
@@ -14,5 +15,11 @@ public String getSNonce() {
 }
 public void setSNonce(String sNonce) {
 	SNonce = sNonce;
+}
+public String getMAC() {
+	return MAC;
+}
+public void setMAC(String mAC) {
+	MAC = mAC;
 }
 }
