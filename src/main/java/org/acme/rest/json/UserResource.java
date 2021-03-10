@@ -169,7 +169,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public HashMap<String,String> decryptNonces(Nonces data) {
-    	//System.out.print("Hi"+data.getCNonce()+data.getSNonce()+data.getMAC());
+    	System.out.print("Hi"+data.getCNonce()+data.getSNonce()+data.getMAC());
     	//define a class that does a decryption
     	String key = "";
     	HashMap<String,String> decryptedNonces=new HashMap<String,String>() ;
