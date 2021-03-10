@@ -102,6 +102,29 @@ public class UserResource {
 	}
 	
     //authorized devices
+    //need change to send a User object json instead of sending the password in the header
+    
+	@POST
+	@Path("/authorization/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response authorizeUser(Authorization auth ) {
+		List<Device> UserBLEDevices = new ArrayList<Device>();
+		//User user = new User();
+		for(final User user1 : Users) {
+			if(user1.username.equals(auth.username)) { 
+				UserBLEDevices = userPermissions.get(user1);
+				UserBLEDevices.add(auth.device);
+				userPermissions.remove(user1);
+				userPermissions.put(user1, UserBLEDevices);
+				return null;	
+				}
+		}
+
+		return null;
+	}
+	
+	
+	
 	@GET
 	@Path("/check/{username}")
 	@Produces(MediaType.TEXT_PLAIN)
