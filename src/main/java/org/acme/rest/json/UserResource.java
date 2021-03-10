@@ -168,11 +168,11 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public HashMap<String,String> decryptNonces(Nonces data) {
+    public Response decryptNonces(Nonces data) {
     	System.out.print("Hi"+data.getCNonce()+data.getSNonce()+data.getMAC());
     	//define a class that does a decryption
     	String key = "";
-    	HashMap<String,String> decryptedNonces=new HashMap<String,String>() ;
+    	Nonces decryptedNonces=new Nonces() ;
 		for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 
@@ -184,8 +184,8 @@ public class UserResource {
 		}
 		
     	AES aes = new AES();
-    	decryptedNonces.put("CNonce", aes.decrypt(data.getCNonce(),key));
-    	decryptedNonces.put( "SNonce",aes.decrypt(data.getSNonce(),key));    	
-    	return decryptedNonces;
+    	decryptedNonces.setCNonce(aes.decrypt(data.getCNonce(),key));
+    	decryptedNonces.setSNonce(aes.decrypt(data.getSNonce(),key));;    	
+    	return  Response.ok(decryptedNonces, MediaType.APPLICATION_JSON).build();
     }
 }
