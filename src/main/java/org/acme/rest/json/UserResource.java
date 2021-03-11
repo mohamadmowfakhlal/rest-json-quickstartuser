@@ -116,11 +116,10 @@ public class UserResource {
 				UserBLEDevices.add(auth.device);
 				userPermissions.remove(user1);
 				userPermissions.put(user1, UserBLEDevices);
-				return null;	
+				break;	
 				}
 		}
-
-		return null;
+		return  Response.ok(userPermissions, MediaType.APPLICATION_JSON).build();
 	}
 	
 	
@@ -137,7 +136,6 @@ public class UserResource {
 					break;
 			}
 		}
-		
 		return Response.ok(login, MediaType.TEXT_PLAIN).build();
 
 	}
@@ -182,10 +180,11 @@ public class UserResource {
 					break;
 			}
 		}
-		
+		if(!key.equals("")) {
     	AES aes = new AES();
     	decryptedNonces.setCNonce(aes.decrypt(data.getCNonce(),key));
-    	decryptedNonces.setSNonce(aes.decrypt(data.getSNonce(),key));;    	
+    	decryptedNonces.setSNonce(aes.decrypt(data.getSNonce(),key));
+		}
     	return  Response.ok(decryptedNonces, MediaType.APPLICATION_JSON).build();
     }
 }
