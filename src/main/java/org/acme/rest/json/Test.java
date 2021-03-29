@@ -9,7 +9,7 @@ public class Test {
     	String key = "2222222222222222";
 
     	AES aes = new AES();
-    	String res = AES.encrypt("222222222222",key);
+    	///String res = AES.encrypt("222222222222",key);
     	
         byte[] nonce = new byte[12];
         new SecureRandom().nextBytes(nonce);
