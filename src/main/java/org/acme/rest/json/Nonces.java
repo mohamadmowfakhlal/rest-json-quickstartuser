@@ -1,4 +1,5 @@
 package org.acme.rest.json;
+import org.json.*;
 
 public class Nonces {
 public byte[] CNonce;
@@ -21,5 +22,14 @@ public String getMAC() {
 }
 public void setMAC(String mAC) {
 	MAC = mAC;
+}
+public JSONObject toJSON() throws JSONException {
+
+	JSONObject jo = new JSONObject();
+	jo.put("SNonce", SNonce);
+	jo.put("MAC", MAC);
+	jo.put("CNonce",CNonce);
+
+	return jo;
 }
 }
