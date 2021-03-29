@@ -1,19 +1,19 @@
 package org.acme.rest.json;
 
 public class Nonces {
-public String CNonce;
-public String SNonce;
+public byte[] CNonce;
+public byte[] SNonce;
 public String MAC;
-public String getCNonce() {
+public byte[] getCNonce() {
 	return CNonce;
 }
-public void setCNonce(String cNonce) {
+public void setCNonce(byte[] cNonce) {
 	CNonce = cNonce;
 }
-public String getSNonce() {
+public byte[] getSNonce() {
 	return SNonce;
 }
-public void setSNonce(String sNonce) {
+public void setSNonce(byte[] sNonce) {
 	SNonce = sNonce;
 }
 public String getMAC() {

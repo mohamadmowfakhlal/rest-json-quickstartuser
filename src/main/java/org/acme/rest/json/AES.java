@@ -28,7 +28,7 @@ public class AES {
 		return new String(encoder.encodeToString(crypted));
 	}
 
-	public static String decrypt(String input, String key) {
+	public static byte[] decrypt(byte[] input, String key) {
 		byte[] output = null;
 		try {
 			java.util.Base64.Decoder decoder = java.util.Base64.getDecoder();
@@ -39,7 +39,7 @@ public class AES {
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		return new String(output);
+		return output;
 	}
 
 
