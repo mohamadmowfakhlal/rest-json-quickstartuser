@@ -182,8 +182,8 @@ public class UserResource {
 		}
 		if(!key.equals("")) {
     	AES aes = new AES();
-    	decryptedNonces.setCNonce(aes.decrypt(data.getCNonce(),key));
-    	decryptedNonces.setSNonce(aes.decrypt(data.getSNonce(),key));
+    	decryptedNonces.setCNonce(aes.decrypt(data.getCNonce(),key.getBytes()));
+    	decryptedNonces.setSNonce(aes.decrypt(data.getSNonce(),key.getBytes()));
 		}
     	return  Response.ok(decryptedNonces, MediaType.APPLICATION_JSON).build();
     }

@@ -1,45 +1,36 @@
 package org.acme.rest.json;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64.*;
 
-//import org.apache.commons.codec.binary.Base64;
-
-/**
- * @author netkiller
- *
- */
 public class AES {
 
-	public static String encrypt(String input, String key) {
+	public  byte[] encrypt(byte[] input, byte[] key) {
 		byte[] crypted = null;
 		try {
 		
-			SecretKeySpec skey = new SecretKeySpec(key.getBytes(), "AES");
+			SecretKeySpec skey = new SecretKeySpec(key, "AES");
 			
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
 			cipher.init(Cipher.ENCRYPT_MODE, skey);
-			crypted = cipher.doFinal(input.getBytes());
+			crypted = cipher.doFinal(input);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		java.util.Base64.Encoder encoder = java.util.Base64.getEncoder();
 		
-		return new String(encoder.encodeToString(crypted));
+		return crypted;
 	}
 
-	public static byte[] decrypt(byte[] input, String key) {
+	public static byte[] decrypt(byte[] input, byte[] key) {
 		byte[] output = null;
 		try {
-			java.util.Base64.Decoder decoder = java.util.Base64.getDecoder();
-			SecretKeySpec skey = new SecretKeySpec(key.getBytes(), "AES");
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			SecretKeySpec skey = new SecretKeySpec(key, "AES");
+			Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
 			cipher.init(Cipher.DECRYPT_MODE, skey);
-			output = cipher.doFinal(decoder.decode(input));
+			output = cipher.doFinal(input);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		return output;
+		return  output;
 	}
 
 
