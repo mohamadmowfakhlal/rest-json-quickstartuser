@@ -176,7 +176,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Device data) {
-    	System.out.print(data.getKey()+data.deviceID+data.MAC);
+    	System.out.print(data.getKey()+data.deviceID+data.MAC+data.CNonce.toString());
     	//define a class that does a decryption
     	String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
