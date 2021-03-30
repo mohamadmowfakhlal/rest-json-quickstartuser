@@ -176,7 +176,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Nonc data) {
-    	System.out.print(data.MAC+data.CNonce+data.SNonce);
+    	//System.out.print(data.MAC+data.CNonce+data.SNonce);
     	//define a class that does a decryption
     	//String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
@@ -198,7 +198,7 @@ public class UserResource {
     	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(),"1111222233334444".getBytes());
 	//	}		
 
-		Nonc non = new Nonc(CNonce.toString(),SNonce.toString());
+		Nonc non = new Nonc("","");
 		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
