@@ -176,7 +176,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Nonc data) {
-    	//System.out.print(data.MAC+data.CNonce+data.SNonce);
+    	System.out.print(data.MAC+data.CNonce+data.SNonce);
     	//define a class that does a decryption
     	//String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
@@ -193,12 +193,12 @@ public class UserResource {
 		//List<Device> UserBLEDevices = new ArrayList<Device>();
 
 		//if(!key.equals("")) {
-    	//AES aes = new AES();
-    	//byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
-    	//byte[] SNonce = aes.decrypt(data.SNonce,"1111222233334444".getBytes());
+    	AES aes = new AES();
+    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(),"1111222233334444".getBytes());
+    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(),"1111222233334444".getBytes());
 	//	}		
 
-		Nonc non = new Nonc("hi","hi");
+		Nonc non = new Nonc(CNonce.toString(),SNonce.toString());
 		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
