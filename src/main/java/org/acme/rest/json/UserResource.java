@@ -194,11 +194,11 @@ public class UserResource {
 
 		//if(!key.equals("")) {
     	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
-    	byte[] SNonce = aes.decrypt(data.SNonce,"1111222233334444".getBytes());
+    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(),"1111222233334444".getBytes());
+    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(),"1111222233334444".getBytes());
 	//	}		
 
-		Nonc non = new Nonc("dd".getBytes(),"dd".getBytes());
+		Nonc non = new Nonc(CNonce.toString(),SNonce.toString());
 		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
