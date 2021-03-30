@@ -199,7 +199,7 @@ public class UserResource {
 	//	}		
 
 		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
-		UserBLENonces.add(non);
+		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
 }
