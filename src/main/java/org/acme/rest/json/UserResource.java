@@ -168,7 +168,7 @@ public class UserResource {
 
 		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
 		UserBLENonces.add(non);
-    	return  Response.ok(UserBLENonces, MediaType.APPLICATION_JSON).build();
+    	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
     
     @Path("/token")

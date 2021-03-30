@@ -2,7 +2,9 @@ package org.acme.rest.json;
 
 import java.util.UUID;
 
-public class Nonc {
+import org.json.JSONObject;
+
+public class Nonc extends JSONObject{
 	private UUID id;
 
 	public byte[] CNonce;
