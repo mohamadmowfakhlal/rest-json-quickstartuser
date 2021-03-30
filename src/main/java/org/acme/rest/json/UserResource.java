@@ -190,6 +190,8 @@ public class UserResource {
 			}
 		}*/
 		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
+		List<Device> UserBLEDevices = new ArrayList<Device>();
+
 		//if(!key.equals("")) {
     	AES aes = new AES();
     	//byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
@@ -197,6 +199,6 @@ public class UserResource {
 		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
 		UserBLENonces.add(non);
 	//	}		
-    	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
+    	return  Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
     }
 }
