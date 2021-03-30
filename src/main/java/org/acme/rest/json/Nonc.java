@@ -7,8 +7,8 @@ import org.json.JSONObject;
 public class Nonc extends JSONObject{
 	private UUID id;
 
-	public byte[] CNonce;
-	public byte[] SNonce;
+	public String CNonce;
+	public String SNonce;
 	public String MAC;
 
 
@@ -24,7 +24,7 @@ public class Nonc extends JSONObject{
 	public Nonc() {
     }
 
-    public Nonc( byte[] CNonce,  byte[] SNonce) {
+    public Nonc( String CNonce,  String SNonce) {
     	id = UUID.randomUUID();
         this.CNonce = CNonce;
         this.SNonce = SNonce;
