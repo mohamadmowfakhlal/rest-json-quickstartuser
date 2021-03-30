@@ -176,7 +176,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Nonces data) {
-    	System.out.print("Hi"+data.getCNonce()+data.getSNonce()+data.getMAC());
+    	System.out.print("Hiiiiiiiiiiiiiiiiiiiiiiiiiiii"+data.getCNonce()+data.getSNonce()+data.getMAC());
     	//define a class that does a decryption
     	String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
@@ -185,7 +185,7 @@ public class UserResource {
 
 			if(device.MAC.equals(data.getMAC())){
 				key = deviceKey.get(device);
-				//System.out.print("key"+key);
+				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key);
 					break;
 			}
 		}
