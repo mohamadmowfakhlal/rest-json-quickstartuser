@@ -166,9 +166,9 @@ public class UserResource {
     	deviceKey.put(device, device.getKey());
 		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
 
-		Nonc non = new Nonc("hi","hi");
-		UserBLENonces.add(non);
-    	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
+		//Nonc non = new Nonc("hi","hi");
+		//UserBLENonces.add(non);
+    	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
     }
     
     @Path("/token")
@@ -194,11 +194,11 @@ public class UserResource {
 
 		//if(!key.equals("")) {
     	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(),"1111222233334444".getBytes());
-    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(),"1111222233334444".getBytes());
+    	byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
+    	byte[] SNonce = aes.decrypt(data.SNonce,"1111222233334444".getBytes());
 	//	}		
 
-		Nonc non = new Nonc("","");
+		Nonc non = new Nonc("dd".getBytes(),"dd".getBytes());
 		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
