@@ -194,8 +194,8 @@ public class UserResource {
 
 		//if(!key.equals("")) {
     	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(),"1111222233334444".getBytes());
-    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(),"1111222233334444".getBytes());
+    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),"1111222233334444".getBytes());
+    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),"1111222233334444".getBytes());
 	//	}		
 
 		Nonc non = new Nonc(CNonce.toString(),SNonce.toString());
