@@ -13,6 +13,14 @@ public class Nonc extends JSONObject{
 
 
 
+	public String getMAC() {
+		return MAC;
+	}
+
+	public void setMAC(String mAC) {
+		MAC = mAC;
+	}
+
 	public Nonc() {
     }
 
