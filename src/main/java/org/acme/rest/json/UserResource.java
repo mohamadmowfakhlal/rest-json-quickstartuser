@@ -194,7 +194,7 @@ public class UserResource {
     	AES aes = new AES();
     	byte[] CNonce = aes.decrypt(data.getCNonce(),"1111222233334444".getBytes());
     	byte[] SNonce = aes.decrypt(data.getSNonce(),"1111222233334444".getBytes());
-		Nonc non = new Nonc(CNonce,SNonce);
+		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
 		UserBLENonces.add(non);
 	//	}		
     	return  Response.ok(UserBLENonces, MediaType.APPLICATION_JSON).build();
