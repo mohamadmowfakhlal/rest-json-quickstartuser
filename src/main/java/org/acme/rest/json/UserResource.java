@@ -192,8 +192,8 @@ public class UserResource {
 		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
 		//if(!key.equals("")) {
     	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
-    	byte[] SNonce = aes.decrypt(data.SNonce,"1111222233334444".getBytes());
+    	//byte[] CNonce = aes.decrypt(data.CNonce,"1111222233334444".getBytes());
+    	//byte[] SNonce = aes.decrypt(data.SNonce,"1111222233334444".getBytes());
 		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
 		UserBLENonces.add(non);
 	//	}		
