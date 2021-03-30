@@ -180,7 +180,7 @@ public class UserResource {
     	//define a class that does a decryption
     	String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
-		for(Device device : BLEDevices) {
+		/*for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 
 			if(device.MAC.equals(data.getMAC())){
@@ -188,15 +188,15 @@ public class UserResource {
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key);
 					break;
 			}
-		}
+		}*/
 		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
-		if(!key.equals("")) {
+		//if(!key.equals("")) {
     	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.getCNonce(),key.getBytes());
-    	byte[] SNonce = aes.decrypt(data.getSNonce(),key.getBytes());
+    	byte[] CNonce = aes.decrypt(data.getCNonce(),"1111222233334444".getBytes());
+    	byte[] SNonce = aes.decrypt(data.getSNonce(),"1111222233334444".getBytes());
 		Nonc non = new Nonc(CNonce,SNonce);
 		UserBLENonces.add(non);
-		}		
+	//	}		
     	return  Response.ok(UserBLENonces, MediaType.APPLICATION_JSON).build();
     }
 }
