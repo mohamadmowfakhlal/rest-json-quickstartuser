@@ -20,6 +20,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
 @Path("/")
 public class UserResource {
 
@@ -147,6 +148,15 @@ public class UserResource {
         return Users;
     }
     
+
+    
+    @Path("/keys")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public Collection<String> getKeys() {
+    	return deviceKey.values();
+    }
+    
     @Path("/keys")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,14 +164,11 @@ public class UserResource {
     public Response add(Device device) {
        	BLEDevices.add(device);
     	deviceKey.put(device, device.getKey());
-    	return  Response.ok(deviceKey.values(), MediaType.APPLICATION_JSON).build();
-    }
-    
-    @Path("/keys")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    public Collection<String> getKeys() {
-    	return deviceKey.values();
+		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
+
+		Nonc non = new Nonc("hi".getBytes(),"hi".getBytes());
+		UserBLENonces.add(non);
+    	return  Response.ok(UserBLENonces, MediaType.APPLICATION_JSON).build();
     }
     
     @Path("/token")
