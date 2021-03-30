@@ -8,8 +8,7 @@ public class Device {
     public String deviceID;
     public String MAC;
     public String Key;
-	public byte[] CNonce;
-	public byte[] SNonce;
+
 
     public String getKey() {
 		return Key;
