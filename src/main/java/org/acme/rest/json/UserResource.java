@@ -198,7 +198,7 @@ public class UserResource {
     	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),"1111222233334444".getBytes());
 	//	}		
 
-		Nonc non = new Nonc(CNonce.toString(),SNonce.toString());
+		Nonc non = new Nonc(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
 		//UserBLENonces.add(non);
     	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
     }
