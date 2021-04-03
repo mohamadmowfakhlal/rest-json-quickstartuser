@@ -1,5 +1,6 @@
 package org.acme.rest.json;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +33,7 @@ public class UserResource {
 	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
 	//binding between the device and the symmetric key that used as a secret between the server and device
 	private HashMap<Device,String> deviceKey = new HashMap<Device,String>();
+	private byte[] key = "1111222233334444".getBytes();
     public UserResource() {
     	User test = new User("mohamad", "hlal");
         Users.add(test);
@@ -164,7 +166,7 @@ public class UserResource {
     public Response add(Device device) {
        	BLEDevices.add(device);
     	deviceKey.put(device, device.getKey());
-		List<Nonc> UserBLENonces = new ArrayList<Nonc>();
+		List<Token> UserBLENonces = new ArrayList<Token>();
 
 		//Nonc non = new Nonc("hi","hi");
 		//UserBLENonces.add(non);
@@ -175,7 +177,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public Response decryptNonces(Nonc data) {
+    public Response decryptNonces(Token data) {
     	System.out.print(data.MAC+data.CNonce+data.SNonce);
     	//define a class that does a decryption
     	//String key = "";
@@ -193,13 +195,25 @@ public class UserResource {
 		//List<Device> UserBLEDevices = new ArrayList<Device>();
 
 		//if(!key.equals("")) {
-    	AES aes = new AES();
-    	byte[] CNonce = aes.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),"1111222233334444".getBytes());
-    	byte[] SNonce = aes.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),"1111222233334444".getBytes());
+    	AES aesinstance = new AES();
+    	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+    	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
 	//	}		
 
-		Nonc non = new Nonc(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
 		//UserBLENonces.add(non);
-    	return  Response.ok(non, MediaType.APPLICATION_JSON).build();
+        //generate session key and encrypt it with the shared symmetric key and send it back to client
+        byte[] sessionkey = generateNonce();
+        byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
+        token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
+        token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
+        //send the key to the gatt client
+    	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
+    }
+    
+    public byte[] generateNonce(){
+        byte[] Snonce = new byte[16];
+        new SecureRandom().nextBytes(Snonce);
+        return  Snonce;
     }
 }
