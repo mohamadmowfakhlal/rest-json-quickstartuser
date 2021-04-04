@@ -11,6 +11,24 @@ public class Token extends JSONObject{
 	public String SNonce;
 	public String MAC;
 	public String sessionKey;
+	public String serverNonce;
+	public String encryptedServerNonce;
+	public String getServerNonce() {
+		return serverNonce;
+	}
+
+	public void setServerNonce(String serverNonce) {
+		this.serverNonce = serverNonce;
+	}
+
+	public String getEncryptedServerNonce() {
+		return encryptedServerNonce;
+	}
+
+	public void setEncryptedServerNonce(String encryptedServerNonce) {
+		this.encryptedServerNonce = encryptedServerNonce;
+	}
+
 	public String encryptedSessionKey;
 	public String getSessionKey() {
 		return sessionKey;

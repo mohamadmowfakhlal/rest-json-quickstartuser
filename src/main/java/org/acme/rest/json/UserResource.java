@@ -204,9 +204,13 @@ public class UserResource {
 		//UserBLENonces.add(non);
         //generate session key and encrypt it with the shared symmetric key and send it back to client
         byte[] sessionkey = generateNonce();
+        byte[] serverNonce = generateNonce();
         byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
+        byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
         token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
         token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
+        token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+        token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
         //send the key to the gatt client
     	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     }
