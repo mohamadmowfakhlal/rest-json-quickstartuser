@@ -13,6 +13,7 @@ public class Token extends JSONObject{
 	public String sessionKey;
 	public String serverNonce;
 	public String encryptedServerNonce;
+	public String username;
 	public String getServerNonce() {
 		return serverNonce;
 	}

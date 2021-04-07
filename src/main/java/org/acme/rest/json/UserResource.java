@@ -1,6 +1,7 @@
 package org.acme.rest.json;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,6 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
 
 
 @Path("/")
@@ -34,6 +38,12 @@ public class UserResource {
 	//binding between the device and the symmetric key that used as a secret between the server and device
 	private HashMap<Device,String> deviceKey = new HashMap<Device,String>();
 	private byte[] key = "1111222233334444".getBytes();
+	
+	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
+	private HashMap<UUID,String> userSession= new HashMap<UUID,String>();
+	private static final int TIMEOUT = 20; // Timeout in seconds
+
+	
     public UserResource() {
     	User test = new User("mohamad", "hlal");
         Users.add(test);
@@ -97,10 +107,15 @@ public class UserResource {
 				if(user1.password.equals(password)) {
 					login = "success";
 					UserBLEDevices = userPermissions.get(user1);
+					UUID session = UUID.randomUUID();
+					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(username, LocalDateTime.now()));
+					//sessionRole.put(session,role);
+					userSession.put(session,username);
 				return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();	
 				}
 			}
 		}
+
 		return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
 	}
 	
@@ -178,7 +193,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Token data) {
-    	System.out.print(data.MAC+data.CNonce+data.SNonce);
+    	System.out.print(data.MAC+data.CNonce+data.SNonce+data.username);
     	//define a class that does a decryption
     	//String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
@@ -195,24 +210,28 @@ public class UserResource {
 		//List<Device> UserBLEDevices = new ArrayList<Device>();
 
 		//if(!key.equals("")) {
-    	AES aesinstance = new AES();
-    	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-    	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-	//	}		
+    	if(isLoggedIn(data.username)) {
+        	AES aesinstance = new AES();
+        	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+    	//	}		
 
-		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-		//UserBLENonces.add(non);
-        //generate session key and encrypt it with the shared symmetric key and send it back to client
-        byte[] sessionkey = generateNonce();
-        byte[] serverNonce = generateNonce();
-        byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
-        byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
-        token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
-        token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
-        token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-        token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-        //send the key to the gatt client
-    	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
+    		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+    		//UserBLENonces.add(non);
+            //generate session key and encrypt it with the shared symmetric key and send it back to client
+            byte[] sessionkey = generateNonce();
+            byte[] serverNonce = generateNonce();
+            byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
+            byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
+            token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
+            token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
+            token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+            token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+            //send the key to the gatt client
+        	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
+    	}else return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+
+    			
     }
     
     public byte[] generateNonce(){
@@ -220,4 +239,30 @@ public class UserResource {
         new SecureRandom().nextBytes(Snonce);
         return  Snonce;
     }
+    
+	private boolean authenticate(UUID session) {
+		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
+		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
+			 //sessionRole.remove(session);
+		 	userSession.remove(session);
+		 }
+		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
+	}
+
+	private String getUsername(UUID session) {
+		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
+
+		return value == null ? "" : value.getKey();
+	}
+
+	public boolean isLoggedIn(String username) {
+		System.out.println("isLoggedIn(" + username + ")");
+
+		for (Entry<UUID, Entry<String, LocalDateTime>> token : userSessionMap.entrySet()) {
+			if (token.getValue().getKey().equals(username)) {
+				return authenticate(token.getKey());
+			}
+		}
+		return false;
+	}
 }
