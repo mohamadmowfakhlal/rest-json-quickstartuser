@@ -245,6 +245,7 @@ public class UserResource {
 		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
 			 //sessionRole.remove(session);
 		 	userSession.remove(session);
+		 	userSessionMap.remove(session);
 		 }
 		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
 	}
