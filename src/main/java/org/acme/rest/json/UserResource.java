@@ -229,7 +229,10 @@ public class UserResource {
             token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             //send the key to the gatt client
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
-    	}else return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+    	}else {
+        	System.out.print("ella");
+
+    		return  Response.ok(null, MediaType.APPLICATION_JSON).build();}
 
     			
     }
