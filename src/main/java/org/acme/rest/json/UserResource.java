@@ -41,7 +41,7 @@ public class UserResource {
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
 	private HashMap<UUID,String> userSession= new HashMap<UUID,String>();
-	private static final int TIMEOUT = 20; // Timeout in seconds
+	private static final int TIMEOUT = 100; // Timeout in seconds
 
 	
     public UserResource() {
