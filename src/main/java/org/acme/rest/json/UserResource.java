@@ -37,7 +37,7 @@ public class UserResource {
 	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
 	//binding between the device and the symmetric key that used as a secret between the server and device
 	private HashMap<Device,String> deviceKey = new HashMap<Device,String>();
-	private byte[] key = "1111222233334444".getBytes();
+	private byte[] key = null;
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
 	private HashMap<UUID,String> userSession= new HashMap<UUID,String>();
