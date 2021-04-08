@@ -197,7 +197,7 @@ public class UserResource {
     	//define a class that does a decryption
     	//String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
-		/*for(Device device : BLEDevices) {
+		for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 
 			if(device.deviceID.equals(data.deviceID)){
@@ -205,7 +205,7 @@ public class UserResource {
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
 					break;
 			}
-		}*/
+		}
 		//List<Nonc> UserBLENonces = new ArrayList<Nonc>();
 		//List<Device> UserBLEDevices = new ArrayList<Device>();
 
