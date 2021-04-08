@@ -9,7 +9,7 @@ public class Token extends JSONObject{
 
 	public String CNonce;
 	public String SNonce;
-	public String MAC;
+	public String deviceID;
 	public String sessionKey;
 	public String serverNonce;
 	public String encryptedServerNonce;
@@ -52,11 +52,11 @@ public class Token extends JSONObject{
 
 
 	public String getMAC() {
-		return MAC;
+		return deviceID;
 	}
 
 	public void setMAC(String mAC) {
-		MAC = mAC;
+		deviceID = mAC;
 	}
 
 	public Token() {

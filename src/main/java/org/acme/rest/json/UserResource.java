@@ -193,19 +193,19 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response decryptNonces(Token data) {
-    	System.out.print(data.MAC+data.CNonce+data.SNonce+data.username);
+    	System.out.print(data.deviceID+data.CNonce+data.SNonce+data.username);
     	//define a class that does a decryption
     	//String key = "";
     	//Nonces decryptedNonces=new Nonces() ;
-		/*for(Device device : BLEDevices) {
+		for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 
-			if(device.MAC.equals(data.getMAC())){
-				key = deviceKey.get(device);
+			if(device.deviceID.equals(data.deviceID)){
+				key = deviceKey.get(device).getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key);
 					break;
 			}
-		}*/
+		}
 		//List<Nonc> UserBLENonces = new ArrayList<Nonc>();
 		//List<Device> UserBLEDevices = new ArrayList<Device>();
 
@@ -230,8 +230,7 @@ public class UserResource {
             //send the key to the gatt client
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {
-        	System.out.print("ella");
-
+        	//System.out.print("ella");
     		return  Response.ok(null, MediaType.APPLICATION_JSON).build();}
 
     			
