@@ -45,8 +45,8 @@ public class UserResource {
 
 	
     public UserResource() {
-    	User test = new User("mohamad", "hlal");
-        Users.add(test);
+    	User testUser = new User("mohamad", "hlal");
+        Users.add(testUser);
         
         Device frontdoor1 = new Device("frontdoorlock","19:11:CA:5A:8B:44");
         Device backdoor1 = new Device("backdoolockr","19:44:C6:9B:95:44");
@@ -54,6 +54,8 @@ public class UserResource {
         Device backdoor2 = new Device("labsdoor","19:44:C6:9B:95:44");
         Device frontdoor3 = new Device("kitchendoor","19:11:CA:5A:8B:44");
         Device backdoor3 = new Device("lightbulb","19:44:C6:9B:95:44");
+        Device huawei = new Device("1922222220","11111111111");
+        huawei.setKey("1111222233334444");
         
         BLEDevices.add(frontdoor1);
         BLEDevices.add(backdoor1);
@@ -61,6 +63,7 @@ public class UserResource {
         BLEDevices.add(backdoor2);
         BLEDevices.add(frontdoor3);
         BLEDevices.add(backdoor3);
+        BLEDevices.add(huawei);
         
          List<Device> testUserDevices = new ArrayList<Device>(); 
          testUserDevices.add(frontdoor1);
@@ -69,9 +72,11 @@ public class UserResource {
          testUserDevices.add(backdoor2);
          testUserDevices.add(frontdoor3);
          testUserDevices.add(backdoor3);
-         userPermissions.put(test, testUserDevices);
+         testUserDevices.add(huawei);
+         userPermissions.put(testUser, testUserDevices);
      
     }
+    
     @Path("/users")
     @GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -180,7 +185,7 @@ public class UserResource {
     @POST
     public Response add(Device device) {
        	BLEDevices.add(device);
-    	deviceKey.put(device, device.getKey());
+    	//deviceKey.put(device, device.getKey());
 		List<Token> UserBLENonces = new ArrayList<Token>();
 
 		//Nonc non = new Nonc("hi","hi");
@@ -201,7 +206,8 @@ public class UserResource {
 			//System.out.print("MAC" + data.getMAC());
 
 			if(device.deviceID.equals(data.deviceID)){
-				key = deviceKey.get(device).getBytes();
+				//key = deviceKey.get(device).getBytes();
+				key = device.getKey().getBytes();
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
 					break;
 			}
