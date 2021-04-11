@@ -127,7 +127,7 @@ public class UserResource {
     //need change to send a User object json instead of sending the password in the header
     
 	@POST
-	@Path("/checkauthentication/{username}")
+	@Path("/checkauthentication/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response request(User user) {
