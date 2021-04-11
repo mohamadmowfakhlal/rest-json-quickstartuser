@@ -101,7 +101,7 @@ public class UserResource {
     //need change to send a User object json instead of sending the password in the header
     
 	@GET
-	@Path("/checkauthorizatation/{username}")
+	@Path("/checkauthentication/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response request(@PathParam("username") String username, @QueryParam("password") String password) {
 		String login = "failed";
@@ -124,13 +124,41 @@ public class UserResource {
 		return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
 	}
 	
+    //need change to send a User object json instead of sending the password in the header
+    
+	@POST
+	@Path("/checkauthentication/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response request(User user) {
+		String login = "failed";
+		List<Device> UserBLEDevices = new ArrayList<Device>();
+		//User user = new User();
+		Session userSession1 = new Session();
+		for(final User user1 : Users) {
+			if(user1.username.equals(user.username)) {
+				if(user1.password.equals(user.password)) {
+					login = "success";
+					UserBLEDevices = userPermissions.get(user1);
+					UUID session = UUID.randomUUID();
+					userSession1.setUUID(session);
+					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(user.username, LocalDateTime.now()));
+					//sessionRole.put(session,role);
+					userSession.put(session,user.username);
+				return Response.ok(userSession1, MediaType.APPLICATION_JSON).build();	
+				}
+			}
+		}
+
+		return Response.ok(userSession1, MediaType.APPLICATION_JSON).build();
+	}
     //authorized devices
     //need change to send a User object json instead of sending the password in the header
     
 	@POST
 	@Path("/authorization/")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response authorizeUser(Authorization auth ) {
+	public Response authorizeUser(Authorization auth) {
 		List<Device> UserBLEDevices = new ArrayList<Device>();
 		//User user = new User();
 		for(final User user1 : Users) {
@@ -185,11 +213,7 @@ public class UserResource {
     @POST
     public Response add(Device device) {
        	BLEDevices.add(device);
-    	//deviceKey.put(device, device.getKey());
 		List<Token> UserBLENonces = new ArrayList<Token>();
-
-		//Nonc non = new Nonc("hi","hi");
-		//UserBLENonces.add(non);
     	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
     }
     
