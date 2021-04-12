@@ -111,7 +111,7 @@ public class UserResource {
 	@Path("/checkauthentication/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response request(User receivedUser) {
+	public Response authenticateUser(User receivedUser) {
 		Session userSession = new Session();
 		for(final User user : Users) {
 			if(user.username.equals(receivedUser.username)) {
@@ -127,6 +127,24 @@ public class UserResource {
 	}
 
     
+	@POST
+	@Path("/authorization/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response authorizeUser(Authorization auth) {
+		List<Device> UserBLEDevices = new ArrayList<Device>();
+		//User user = new User();
+		for(final User user : Users) {
+			if(user.username.equals(auth.username)) { 
+				UserBLEDevices = userPermissions.get(user);
+				UserBLEDevices.add(auth.device);
+				userPermissions.remove(user);
+				userPermissions.put(user, UserBLEDevices);
+				break;	
+				}
+		}
+		return  Response.ok(userPermissions, MediaType.APPLICATION_JSON).build();
+	}
+	
     @Path("/device")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
@@ -140,6 +158,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response getToken(Token data) {
+
 		for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 

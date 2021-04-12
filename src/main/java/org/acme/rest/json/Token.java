@@ -14,6 +14,7 @@ public class Token extends JSONObject{
 	public String serverNonce;
 	public String encryptedServerNonce;
 	public String username;
+	
 	public String getServerNonce() {
 		return serverNonce;
 	}
@@ -47,16 +48,12 @@ public class Token extends JSONObject{
 		this.encryptedSessionKey = encryptedSessionKey;
 	}
 
-
-
-
-
-	public String getMAC() {
+	public String getDeviceID() {
 		return deviceID;
 	}
 
-	public void setMAC(String mAC) {
-		deviceID = mAC;
+	public void setDeviceID(String deviceID) {
+		this.deviceID = deviceID;
 	}
 
 	public Token() {
