@@ -31,6 +31,7 @@ public class UserResource {
 
     //private Set<User> Users = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap<>()));
     private List<User> Users = new ArrayList<User>();
+
     //All device in the system
     private List<Device> BLEDevices = new ArrayList<Device>();    
     //binding between the user and a list of devices
@@ -76,6 +77,9 @@ public class UserResource {
          userPermissions.put(testUser, testUserDevices);
      
     }
+
+/*
+
     
     @Path("/users")
     @GET
