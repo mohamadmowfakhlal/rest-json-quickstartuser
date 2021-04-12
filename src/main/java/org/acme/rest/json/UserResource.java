@@ -36,12 +36,10 @@ public class UserResource {
     private List<Device> BLEDevices = new ArrayList<Device>();    
     //binding between the user and a list of devices
 	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
-	//binding between the device and the symmetric key that used as a secret between the server and device
-	private HashMap<Device,String> deviceKey = new HashMap<Device,String>();
 	private byte[] key = null;
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
-	private HashMap<UUID,String> userSession= new HashMap<UUID,String>();
+
 	private static final int TIMEOUT = 100; // Timeout in seconds
 
 	
@@ -98,152 +96,59 @@ public class UserResource {
     @Path("/users")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public void add(User user) {
+    public void addUser(User user) {
         Users.add(user);
     }
 
-    //need change to send a User object json instead of sending the password in the header
-    
-	@GET
-	@Path("/checkauthentication/{username}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response request(@PathParam("username") String username, @QueryParam("password") String password) {
-		String login = "failed";
-		List<Device> UserBLEDevices = new ArrayList<Device>();
-		//User user = new User();
-		for(final User user1 : Users) {
-			if(user1.username.equals(username)) {
-				if(user1.password.equals(password)) {
-					login = "success";
-					UserBLEDevices = userPermissions.get(user1);
-					UUID session = UUID.randomUUID();
-					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(username, LocalDateTime.now()));
-					//sessionRole.put(session,role);
-					userSession.put(session,username);
-				return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();	
-				}
-			}
-		}
-
-		return Response.ok(UserBLEDevices, MediaType.APPLICATION_JSON).build();
-	}
-	
-    //need change to send a User object json instead of sending the password in the header
-    
+    @DELETE
+    public List<User> deleteUser(User user) {
+        Users.removeIf(existingUser -> existingUser.username.contentEquals(user.username));
+        return Users;
+    }
+        
+   
 	@POST
 	@Path("/checkauthentication/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response request(User user) {
-		String login = "failed";
-		List<Device> UserBLEDevices = new ArrayList<Device>();
-		//User user = new User();
-		Session userSession1 = new Session();
-		for(final User user1 : Users) {
-			if(user1.username.equals(user.username)) {
-				if(user1.password.equals(user.password)) {
-					login = "success";
-					UserBLEDevices = userPermissions.get(user1);
+	public Response request(User receivedUser) {
+		Session userSession = new Session();
+		for(final User user : Users) {
+			if(user.username.equals(receivedUser.username)) {
+				if(user.password.equals(receivedUser.password)) {
 					UUID session = UUID.randomUUID();
-					userSession1.setUUID(session);
-					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(user.username, LocalDateTime.now()));
-					//sessionRole.put(session,role);
-					userSession.put(session,user.username);
-				return Response.ok(userSession1, MediaType.APPLICATION_JSON).build();	
+					userSession.setUUID(session);
+					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(receivedUser.username, LocalDateTime.now()));
+				return Response.ok(userSession, MediaType.APPLICATION_JSON).build();	
 				}
 			}
 		}
-
-		return Response.ok(userSession1, MediaType.APPLICATION_JSON).build();
+		return Response.ok(userSession, MediaType.APPLICATION_JSON).build();
 	}
-    //authorized devices
-    //need change to send a User object json instead of sending the password in the header
-    
-	@POST
-	@Path("/authorization/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response authorizeUser(Authorization auth) {
-		List<Device> UserBLEDevices = new ArrayList<Device>();
-		//User user = new User();
-		for(final User user1 : Users) {
-			if(user1.username.equals(auth.username)) { 
-				UserBLEDevices = userPermissions.get(user1);
-				UserBLEDevices.add(auth.device);
-				userPermissions.remove(user1);
-				userPermissions.put(user1, UserBLEDevices);
-				break;	
-				}
-		}
-		return  Response.ok(userPermissions, MediaType.APPLICATION_JSON).build();
-	}
-	
-	
-	
-	@GET
-	@Path("/check/{username}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response requestauthorize(@PathParam("username") String username, @QueryParam("password") String password) {
-		String login = "failed";
-		for(final User user1 : Users) {
-			if(user1.username.equals(username)) {
-				if(user1.password.equals(password))
-					login = "success";
-					break;
-			}
-		}
-		return Response.ok(login, MediaType.TEXT_PLAIN).build();
-
-	}
-	
-	
-    @DELETE
-    public List<User> delete(User user) {
-        Users.removeIf(existingUser -> existingUser.username.contentEquals(user.username));
-        return Users;
-    }
-    
 
     
-    @Path("/keys")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    public Collection<String> getKeys() {
-    	return deviceKey.values();
-    }
-    
-    @Path("/keys")
+    @Path("/device")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public Response add(Device device) {
+    public void addDevice(Device device) {
        	BLEDevices.add(device);
 		List<Token> UserBLENonces = new ArrayList<Token>();
-    	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
     }
     
     @Path("/token")
     @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public Response decryptNonces(Token data) {
-    	System.out.print(data.deviceID+data.CNonce+data.SNonce+data.username);
-    	//define a class that does a decryption
-    	//String key = "";
-    	//Nonces decryptedNonces=new Nonces() ;
+    public Response getToken(Token data) {
 		for(Device device : BLEDevices) {
 			//System.out.print("MAC" + data.getMAC());
 
 			if(device.deviceID.equals(data.deviceID)){
-				//key = deviceKey.get(device).getBytes();
 				key = device.getKey().getBytes();
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
 					break;
 			}
 		}
-		//List<Nonc> UserBLENonces = new ArrayList<Nonc>();
-		//List<Device> UserBLEDevices = new ArrayList<Device>();
-
-		//if(!key.equals("")) {
     	if(isLoggedIn(data.username)) {
         	AES aesinstance = new AES();
         	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
@@ -279,8 +184,6 @@ public class UserResource {
 	private boolean authenticate(UUID session) {
 		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
 		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
-			 //sessionRole.remove(session);
-		 	userSession.remove(session);
 		 	userSessionMap.remove(session);
 		 }
 		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
