@@ -154,14 +154,13 @@ public class UserResource {
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.oldDeviceID)){
-    				device1.deviceID = device.deviceID;
-    				
+    				device1.deviceID = device.deviceID;    				
     				key = device1.getKey().getBytes();
-    				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
+    				System.out.print("new value deviceID"+device1.deviceID);
     				break;
     			}
     		}    	
-    		}
+    	}
        	//BLEDevices.add(device);
     }
     
