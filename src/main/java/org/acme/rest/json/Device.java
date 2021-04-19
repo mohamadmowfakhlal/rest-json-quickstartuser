@@ -7,7 +7,15 @@ public class Device {
 
     public String deviceID;
     public String oldDeviceID;
-    public String MAC;
+    public String getOldDeviceID() {
+		return oldDeviceID;
+	}
+
+	public void setOldDeviceID(String oldDeviceID) {
+		this.oldDeviceID = oldDeviceID;
+	}
+
+	public String MAC;
     public String Key;
 	public String username;
 
