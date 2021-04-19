@@ -150,8 +150,17 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public void updateDevice(Device device) {
-    	System.out.print("devices"+device.deviceID+device.username);
-       	BLEDevices.add(device);
+    	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
+    	if(isLoggedIn(device.username)) {
+    		for(Device device1 : BLEDevices) {
+    			if(device1.oldDeviceID.equals(device.oldDeviceID)){
+    				key = device1.getKey().getBytes();
+    				//System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
+    				break;
+    			}
+    		}    	
+    		}
+       	//BLEDevices.add(device);
     }
     
     @Path("/token")

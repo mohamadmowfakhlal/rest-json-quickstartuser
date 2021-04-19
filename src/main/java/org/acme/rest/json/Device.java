@@ -6,6 +6,7 @@ public class Device {
 	private UUID id;
 
     public String deviceID;
+    public String oldDeviceID;
     public String MAC;
     public String Key;
 	public String username;
