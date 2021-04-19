@@ -29,13 +29,13 @@ import java.util.AbstractMap.SimpleEntry;
 @Path("/")
 public class UserResource {
 
-    //private Set<User> Users = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap<>()));
     private List<User> Users = new ArrayList<User>();
 
     //All device in the system
     private List<Device> BLEDevices = new ArrayList<Device>();    
+    
     //binding between the user and a list of devices
-	private HashMap<User,List<Device>> userPermissions= new HashMap<User,List<Device>>();
+	private HashMap<User,List<Device>> userDevices= new HashMap<User,List<Device>>();
 	private byte[] key = null;
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
@@ -72,7 +72,7 @@ public class UserResource {
          testUserDevices.add(frontdoor3);
          testUserDevices.add(backdoor3);
          testUserDevices.add(huawei);
-         userPermissions.put(testUser, testUserDevices);
+         userDevices.put(testUser, testUserDevices);
      
     }
 
@@ -85,14 +85,8 @@ public class UserResource {
     public List<User> list() {
         return Users;
     }
-/*
-    @GET
-    @Path("/username/{username}")
-    public Set<Country> name(@PathParam String name) {
-        return countriesService.getByName(name);
-    }
-    */
-    //@Produces(MediaType.APPLICATION_JSON)
+*/
+
     @Path("/users")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
@@ -135,14 +129,14 @@ public class UserResource {
 		//User user = new User();
 		for(final User user : Users) {
 			if(user.username.equals(auth.username)) { 
-				UserBLEDevices = userPermissions.get(user);
+				UserBLEDevices = userDevices.get(user);
 				UserBLEDevices.add(auth.device);
-				userPermissions.remove(user);
-				userPermissions.put(user, UserBLEDevices);
+				userDevices.remove(user);
+				userDevices.put(user, UserBLEDevices);
 				break;	
 				}
 		}
-		return  Response.ok(userPermissions, MediaType.APPLICATION_JSON).build();
+		return  Response.ok(userDevices, MediaType.APPLICATION_JSON).build();
 	}
 	
     @Path("/device")
@@ -150,7 +144,14 @@ public class UserResource {
     @POST
     public void addDevice(Device device) {
        	BLEDevices.add(device);
-		List<Token> UserBLENonces = new ArrayList<Token>();
+    }
+
+    @Path("/devices")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public void updateDevice(Device device) {
+    	System.out.print("devices"+device.deviceID+device.username);
+       	BLEDevices.add(device);
     }
     
     @Path("/token")
@@ -160,8 +161,6 @@ public class UserResource {
     public Response getToken(Token data) {
 
 		for(Device device : BLEDevices) {
-			//System.out.print("MAC" + data.getMAC());
-
 			if(device.deviceID.equals(data.deviceID)){
 				key = device.getKey().getBytes();
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
@@ -188,7 +187,6 @@ public class UserResource {
             //send the key to the gatt client
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {
-        	//System.out.print("ella");
     		return  Response.ok(null, MediaType.APPLICATION_JSON).build();}
 
     			

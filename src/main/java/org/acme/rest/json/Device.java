@@ -8,9 +8,18 @@ public class Device {
     public String deviceID;
     public String MAC;
     public String Key;
+	public String username;
 
 
-    public String getKey() {
+    public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getKey() {
 		return Key;
 	}
 
