@@ -153,7 +153,7 @@ public class UserResource {
     	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
-    			if(device1.oldDeviceID.equals(device.oldDeviceID)){
+    			if(device1.deviceID.equals(device.oldDeviceID)){
     				device1.deviceID = device.deviceID;
     				key = device1.getKey().getBytes();
     				//System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
