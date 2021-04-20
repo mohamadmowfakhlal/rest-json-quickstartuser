@@ -76,7 +76,7 @@ public class UserResource {
      
     }
 
-/*
+
 
     
     @Path("/users")
@@ -85,7 +85,7 @@ public class UserResource {
     public List<User> list() {
         return Users;
     }
-*/
+
 
     @Path("/users")
     @Consumes(MediaType.APPLICATION_JSON)
