@@ -215,10 +215,9 @@ public class UserResource {
             //send the key to the gatt client
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {
-    		return  Response.ok(null, MediaType.APPLICATION_JSON).build();}
-
-    			
-    }
+    		return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+    		}
+ 		}
     
     public byte[] generateNonce(){
         byte[] Snonce = new byte[16];
@@ -229,6 +228,7 @@ public class UserResource {
 	private boolean authenticate(UUID session) {
 		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
 		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
+			System.out.println("session is finished");
 		 	userSessionMap.remove(session);
 		 }
 		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
@@ -245,6 +245,7 @@ public class UserResource {
 
 		for (Entry<UUID, Entry<String, LocalDateTime>> token : userSessionMap.entrySet()) {
 			if (token.getValue().getKey().equals(username)) {
+				System.out.println("session is still valied");
 				return authenticate(token.getKey());
 			}
 		}
