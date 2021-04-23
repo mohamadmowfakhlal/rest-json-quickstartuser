@@ -188,7 +188,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response getToken(Token data) {
-
+    	System.out.print("Tokens"+data.deviceID+data.username+data.CNonce+data.SNonce);
 		for(Device device : BLEDevices) {
 			if(device.deviceID.equals(data.deviceID)){
 				key = device.getKey().getBytes();
@@ -230,8 +230,8 @@ public class UserResource {
 	private boolean authenticate(UUID session) {
 		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
 		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
-			System.out.println("session is finished"+userSessionMap.size());
 		 	userSessionMap.remove(session);
+			System.out.println("session is finished"+userSessionMap.size());
 		 }
 		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
 	}
