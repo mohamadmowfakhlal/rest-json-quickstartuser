@@ -7,6 +7,11 @@ public class Device {
 
     public String deviceID;
     public String oldDeviceID;
+	public String MAC;
+    public String key;
+	public String username;
+
+	
     public String getOldDeviceID() {
 		return oldDeviceID;
 	}
@@ -15,9 +20,6 @@ public class Device {
 		this.oldDeviceID = oldDeviceID;
 	}
 
-	public String MAC;
-    public String Key;
-	public String username;
 
 
     public String getUsername() {
@@ -29,11 +31,11 @@ public class Device {
 	}
 
 	public String getKey() {
-		return Key;
+		return key;
 	}
 
-	public void setKey(String key) {
-		Key = key;
+	public void setKey(String key1) {
+		key = key1;
 	}
 
 	public Device() {
