@@ -112,6 +112,7 @@ public class UserResource {
 				if(user.password.equals(receivedUser.password)) {
 					UUID session = UUID.randomUUID();
 					userSession.setUUID(session);
+					if(!isLoggedIn(receivedUser.username))
 					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(receivedUser.username, LocalDateTime.now()));
 					return Response.ok(userSession, MediaType.APPLICATION_JSON).build();	
 				}
