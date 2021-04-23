@@ -113,7 +113,7 @@ public class UserResource {
 					UUID session = UUID.randomUUID();
 					userSession.setUUID(session);
 					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(receivedUser.username, LocalDateTime.now()));
-				return Response.ok(userSession, MediaType.APPLICATION_JSON).build();	
+					return Response.ok(userSession, MediaType.APPLICATION_JSON).build();	
 				}
 			}
 		}
@@ -228,7 +228,7 @@ public class UserResource {
 	private boolean authenticate(UUID session) {
 		SimpleEntry<String, LocalDateTime> value = (SimpleEntry<String, LocalDateTime>) userSessionMap.get(session);
 		 if ( value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT))) {
-			System.out.println("session is finished");
+			System.out.println("session is finished"+userSessionMap.size());
 		 	userSessionMap.remove(session);
 		 }
 		 return value == null ? false : !value.getValue().isBefore(LocalDateTime.now().minusSeconds(TIMEOUT));
