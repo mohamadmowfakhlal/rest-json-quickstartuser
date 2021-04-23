@@ -197,7 +197,7 @@ public class UserResource {
 			}
 		}
     	if(isLoggedIn(data.username)) {
-    		System.out.print("Token for authenticated users");
+    		System.out.print("Token for authenticated users"+userSessionMap.size());
         	AES aesinstance = new AES();
         	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
         	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
