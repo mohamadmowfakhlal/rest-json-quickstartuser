@@ -152,6 +152,7 @@ public class RestServerResource {
     @POST
     public Response updateDeviceID(Device device) {
     	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
+    	Device d = new Device();
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.oldDeviceID)){
@@ -163,7 +164,7 @@ public class RestServerResource {
     		}
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
     	}else
-        	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+        	return  Response.ok(d, MediaType.APPLICATION_JSON).build();
     }
 
     @Path("/key")
