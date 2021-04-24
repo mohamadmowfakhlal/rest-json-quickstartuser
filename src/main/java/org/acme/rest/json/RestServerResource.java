@@ -27,7 +27,7 @@ import java.util.AbstractMap.SimpleEntry;
 
 
 @Path("/")
-public class UserResource {
+public class RestServerResource {
 
     private List<User> Users = new ArrayList<User>();
 
@@ -43,7 +43,7 @@ public class UserResource {
 	private static final int TIMEOUT = 100; // Timeout in seconds
 
 	
-    public UserResource() {
+    public RestServerResource() {
     	User testUser = new User("mohamad", "hlal");
         Users.add(testUser);
         
@@ -150,7 +150,7 @@ public class UserResource {
     @Path("/deviceID")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public void updateDevice(Device device) {
+    public Response updateDeviceID(Device device) {
     	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
@@ -160,8 +160,11 @@ public class UserResource {
     				System.out.print("new value deviceID"+device1.deviceID);
     				break;
     			}
-    		}    	
-    	}
+    		}
+        	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
+    	}else
+        	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+
        	//BLEDevices.add(device);
     }
 
@@ -179,7 +182,6 @@ public class UserResource {
     			}
     		}    	
     	}
-       	//BLEDevices.add(device);
     }
     
     
@@ -214,7 +216,7 @@ public class UserResource {
             token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-            //send the key to the gatt client
+            //send the key to the gatt client            
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {
     		return  Response.ok(null, MediaType.APPLICATION_JSON).build();
