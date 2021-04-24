@@ -54,7 +54,7 @@ public class RestServerResource {
         Device frontdoor3 = new Device("kitchendoor","19:11:CA:5A:8B:44");
         Device backdoor3 = new Device("lightbulb","19:44:C6:9B:95:44");
         Device huawei = new Device("1922222220","11111111111");
-        huawei.setKey("1111222233334444");
+        huawei.setKey("0000000000000000");
         
         BLEDevices.add(frontdoor1);
         BLEDevices.add(backdoor1);
@@ -118,7 +118,7 @@ public class RestServerResource {
 				}
 			}
 		}
-		return Response.ok(userSession, MediaType.APPLICATION_JSON).build();
+					return Response.ok(userSession, MediaType.APPLICATION_JSON).build();
 	}
 
     
@@ -164,14 +164,12 @@ public class RestServerResource {
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
     	}else
         	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
-
-       	//BLEDevices.add(device);
     }
 
     @Path("/key")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public void updateKeyForDevice(Device device) {
+    public Response updateKeyForDevice(Device device) {
     	System.out.print("keys"+device.deviceID+device.username+device.key);
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
@@ -181,7 +179,10 @@ public class RestServerResource {
     				break;
     			}
     		}    	
-    	}
+        	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
+    	}else
+        	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
+    	
     }
     
     
