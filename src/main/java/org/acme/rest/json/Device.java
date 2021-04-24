@@ -2,7 +2,9 @@ package org.acme.rest.json;
 
 import java.util.UUID;
 
-public class Device {
+import org.json.JSONObject;
+
+public class Device  extends JSONObject{
 	private UUID id;
 
     public String deviceID;
