@@ -40,7 +40,7 @@ public class RestServerResource {
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
 
-	private static final int TIMEOUT = 30; // Timeout in seconds
+	private static final int TIMEOUT = 120; // Timeout in seconds
 
 	
     public RestServerResource() {
