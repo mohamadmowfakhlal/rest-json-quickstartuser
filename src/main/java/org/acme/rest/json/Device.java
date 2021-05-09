@@ -43,9 +43,9 @@ public class Device  extends JSONObject{
 	public Device() {
     }
 
-    public Device(String deviceID, String MAC) {
+    public Device(String deviceID, String key) {
     	id = UUID.randomUUID();
         this.deviceID = deviceID;
-        this.MAC = MAC;
+        this.key = key;
     }
 }

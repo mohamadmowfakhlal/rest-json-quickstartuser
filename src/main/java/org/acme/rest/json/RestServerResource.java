@@ -36,6 +36,7 @@ public class RestServerResource {
     
     //binding between the user and a list of devices
 	private HashMap<User,List<Device>> userDevices= new HashMap<User,List<Device>>();
+	
 	private byte[] key = null;
 	
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
@@ -53,8 +54,10 @@ public class RestServerResource {
         Device backdoor2 = new Device("labsdoor","19:44:C6:9B:95:44");
         Device frontdoor3 = new Device("kitchendoor","19:11:CA:5A:8B:44");
         Device backdoor3 = new Device("lightbulb","19:44:C6:9B:95:44");
-        Device huawei = new Device("1922222220","11111111111");
-        huawei.setKey("0000000000000000");
+        
+        
+        Device huawei = new Device("0000000000","0000000000000000");
+        //huawei.setKey("0000000000000000");
         
         BLEDevices.add(frontdoor1);
         BLEDevices.add(backdoor1);
@@ -113,7 +116,7 @@ public class RestServerResource {
 					UUID session = UUID.randomUUID();
 					userSession.setUUID(session);
 					if(!isLoggedIn(receivedUser.username))
-					userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(receivedUser.username, LocalDateTime.now()));
+						userSessionMap.put(session, new SimpleEntry<String, LocalDateTime>(receivedUser.username, LocalDateTime.now()));
 					return Response.ok(userSession, MediaType.APPLICATION_JSON).build();	
 				}
 			}
@@ -152,7 +155,7 @@ public class RestServerResource {
     @POST
     public Response updateDeviceID(Device device) {
     	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
-    	Device d = new Device();
+    	Device dev = new Device();
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.oldDeviceID)){
@@ -164,7 +167,7 @@ public class RestServerResource {
     		}
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
     	}else
-        	return  Response.ok(d, MediaType.APPLICATION_JSON).build();
+        	return  Response.ok(dev, MediaType.APPLICATION_JSON).build();
     }
 
     @Path("/key")
