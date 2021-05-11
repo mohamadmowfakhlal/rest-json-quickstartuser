@@ -160,7 +160,7 @@ public class RestServerResource {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.oldDeviceID)){
     				device1.deviceID = device.deviceID;    				
-    				key = device1.getKey().getBytes();
+    				key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
     				System.out.print("new value deviceID"+device1.deviceID);
     				break;
     			}
@@ -179,6 +179,7 @@ public class RestServerResource {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.deviceID)){
     				//String k = new String(device.key,java.nio.charset.StandardCharsets.ISO_8859_1);
+    				
     				device1.setKey(device.key);     		
     				System.out.print("new value key"+device1.key);
     				break;
@@ -201,7 +202,7 @@ public class RestServerResource {
 		for(Device device : BLEDevices) {
 			if(device.deviceID.equals(data.deviceID)){
 				key = device.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
+				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+device.getKey());
 					break;
 			}
 		}
