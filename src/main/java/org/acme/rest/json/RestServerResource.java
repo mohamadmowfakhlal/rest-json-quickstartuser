@@ -174,10 +174,11 @@ public class RestServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response updateKeyForDevice(Device device) {
-    	System.out.print("keys"+device.deviceID+device.username+device.key);
+    	System.out.print("keys"+device.deviceID+device.username+device.key);    	
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.deviceID)){
+    				//String k = new String(device.key,java.nio.charset.StandardCharsets.ISO_8859_1);
     				device1.setKey(device.key);     		
     				System.out.print("new value key"+device1.key);
     				break;
@@ -199,7 +200,7 @@ public class RestServerResource {
     	System.out.print("Tokens"+data.deviceID+data.username+data.CNonce+data.SNonce);
 		for(Device device : BLEDevices) {
 			if(device.deviceID.equals(data.deviceID)){
-				key = device.getKey().getBytes();
+				key = device.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
 				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+key.toString());
 					break;
 			}
