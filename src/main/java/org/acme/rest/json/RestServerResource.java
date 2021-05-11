@@ -154,7 +154,7 @@ public class RestServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response updateDeviceID(Device device) {
-    	System.out.print("devices"+device.deviceID+device.username+device.oldDeviceID);
+    	System.out.print("deviceID"+device.deviceID+device.username+"oldedeviceID"+device.oldDeviceID);
     	Device dev = new Device();
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
