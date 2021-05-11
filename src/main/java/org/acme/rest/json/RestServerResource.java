@@ -184,9 +184,10 @@ public class RestServerResource {
     			}
     		}    	
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
-    	}else
-        	return  Response.ok(null, MediaType.APPLICATION_JSON).build();
-    	
+    	}else {
+        	Device dev = new Device();
+        	return  Response.ok(dev, MediaType.APPLICATION_JSON).build();
+    	}
     }
     
     
