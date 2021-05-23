@@ -157,12 +157,10 @@ public class RestServerResource {
     	System.out.print("deviceID"+device.deviceID+device.username+"oldedeviceID"+device.oldDeviceID);
     	Device dev = new Device();
 		for(Device device1 : BLEDevices) {
-			if(device1.deviceID.equals(device.oldDeviceID)){
 				//device1.deviceID = device.deviceID;    				
 				//key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
 				System.out.print("correct deviceID"+device1.deviceID);
-				break;
-			}
+
 		}
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
