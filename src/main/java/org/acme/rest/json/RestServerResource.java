@@ -156,6 +156,14 @@ public class RestServerResource {
     public Response updateDeviceID(Device device) {
     	System.out.print("deviceID"+device.deviceID+device.username+"oldedeviceID"+device.oldDeviceID);
     	Device dev = new Device();
+		for(Device device1 : BLEDevices) {
+			if(device1.deviceID.equals(device.oldDeviceID)){
+				//device1.deviceID = device.deviceID;    				
+				//key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+				System.out.print("correct deviceID"+device1.deviceID);
+				break;
+			}
+		}
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.oldDeviceID)){
@@ -198,11 +206,11 @@ public class RestServerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response getToken(Token data) {
-    	System.out.print("Tokens"+data.deviceID+data.username+data.CNonce+data.SNonce);
+    	System.out.print("Tokens:deviceID"+data.deviceID+"username"+data.username+"CNonce"+data.CNonce+"SNonce"+data.SNonce);
 		for(Device device : BLEDevices) {
 			if(device.deviceID.equals(data.deviceID)){
 				key = device.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-				System.out.print("keyyyyyyyyyyyyyyyyyyyyyyyyyy"+device.getKey());
+				System.out.print("key for deviceID"+device.getKey());
 					break;
 			}
 		}
