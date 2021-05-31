@@ -46,7 +46,7 @@ public class RestServerResource {
 	
     public RestServerResource() {
     	User testUser = new User("mohamad", "hlal");
-    	User testUser1 = new User("ella", "alali");
+    	User testUser1 = new User("1", "1");
     	Users.add(testUser);
     	Users.add(testUser1);
         Device frontdoor1 = new Device("frontdoorlock","19:11:CA:5A:8B:44");
