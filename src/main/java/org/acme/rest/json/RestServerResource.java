@@ -46,8 +46,9 @@ public class RestServerResource {
 	
     public RestServerResource() {
     	User testUser = new User("mohamad", "hlal");
-        Users.add(testUser);
-        
+    	User testUser1 = new User("ella", "alali");
+    	Users.add(testUser);
+    	Users.add(testUser1);
         Device frontdoor1 = new Device("frontdoorlock","19:11:CA:5A:8B:44");
         Device backdoor1 = new Device("backdoolockr","19:44:C6:9B:95:44");
         Device frontdoor2 = new Device("temperture","19:11:CA:5A:8B:44");
@@ -76,7 +77,7 @@ public class RestServerResource {
          testUserDevices.add(backdoor3);
          testUserDevices.add(huawei);
          userDevices.put(testUser, testUserDevices);
-     
+         userDevices.put(testUser1, testUserDevices);
     }
 
 

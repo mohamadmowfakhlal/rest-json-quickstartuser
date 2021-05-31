@@ -1,9 +1,18 @@
 package org.acme.rest.json;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.util.Base64;
+
+import javax.crypto.SecretKey;
 
 public class Test {
 
@@ -31,6 +40,46 @@ public class Test {
         new SecureRandom().nextBytes(nonce);
 
         System.out.println(convertBytesToHex(nonce));
+        KeyStore keyStore = null;
+        try {
+			keyStore = KeyStore.getInstance("JKS");
+			try {
+				keyStore.load(null,null);
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CertificateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        char[] myPass = null;
+        SecretKey secretKey = null;
+
+        /*
+         * Store a SecretKey in the KeyStore, with "mypass"
+         * as the password.
+         */
+
+        InputStream keyStream = new ByteArrayInputStream("afa".getBytes());
+        try {
+			keyStore.load(keyStream, null);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
     // util to print bytes in hex
