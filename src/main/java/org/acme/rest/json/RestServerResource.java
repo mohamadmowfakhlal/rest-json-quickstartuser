@@ -42,23 +42,21 @@ public class RestServerResource {
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
 
 	private static final int TIMEOUT = 500; // Timeout in seconds
+    List<Device> AssignededUserDevices = new ArrayList<Device>(); 
 
 	
     public RestServerResource() {
     	User testUser = new User("mohamad", "hlal");
-    	User testUser1 = new User("1", "1");
+    	User testUser1 = new User("1", "hlal");
     	Users.add(testUser);
     	Users.add(testUser1);
-        Device frontdoor1 = new Device("frontdoorlock","19:11:CA:5A:8B:44");
-        Device backdoor1 = new Device("backdoolockr","19:44:C6:9B:95:44");
-        Device frontdoor2 = new Device("temperture","19:11:CA:5A:8B:44");
-        Device backdoor2 = new Device("labsdoor","19:44:C6:9B:95:44");
-        Device frontdoor3 = new Device("kitchendoor","19:11:CA:5A:8B:44");
-        Device backdoor3 = new Device("lightbulb","19:44:C6:9B:95:44");
-        
-        
+        Device frontdoor1 = new Device("0000000000","0000000000000000");
+        Device backdoor1 = new Device("0000000000","0000000000000000");
+        Device frontdoor2 = new Device("0000000000","0000000000000000");
+        Device backdoor2 = new Device("0000000000","0000000000000000");
+        Device frontdoor3 = new Device("0000000000","0000000000000000");
+        Device backdoor3 = new Device("0000000000","0000000000000000");       
         Device huawei = new Device("0000000000","0000000000000000");
-        //huawei.setKey("0000000000000000");
         
         BLEDevices.add(frontdoor1);
         BLEDevices.add(backdoor1);
@@ -68,16 +66,15 @@ public class RestServerResource {
         BLEDevices.add(backdoor3);
         BLEDevices.add(huawei);
         
-         List<Device> testUserDevices = new ArrayList<Device>(); 
-         testUserDevices.add(frontdoor1);
-         testUserDevices.add(backdoor1);
-         testUserDevices.add(frontdoor2);
-         testUserDevices.add(backdoor2);
-         testUserDevices.add(frontdoor3);
-         testUserDevices.add(backdoor3);
-         testUserDevices.add(huawei);
-         userDevices.put(testUser, testUserDevices);
-         userDevices.put(testUser1, testUserDevices);
+         AssignededUserDevices.add(frontdoor1);
+         AssignededUserDevices.add(backdoor1);
+         AssignededUserDevices.add(frontdoor2);
+         AssignededUserDevices.add(backdoor2);
+         AssignededUserDevices.add(frontdoor3);
+         AssignededUserDevices.add(backdoor3);
+         AssignededUserDevices.add(huawei);
+         userDevices.put(testUser, AssignededUserDevices);
+         userDevices.put(testUser1, AssignededUserDevices);
     }
 
 
@@ -86,7 +83,7 @@ public class RestServerResource {
     @Path("/users")
     @GET
 	@Produces(MediaType.APPLICATION_JSON)
-    public List<User> list() {
+    public List<User> listUsers() {
         return Users;
     }
 
@@ -97,7 +94,8 @@ public class RestServerResource {
     public void addUser(User user) {
         Users.add(user);
     }
-
+    
+    @Path("/users")
     @DELETE
     public List<User> deleteUser(User user) {
         Users.removeIf(existingUser -> existingUser.username.contentEquals(user.username));
@@ -106,10 +104,10 @@ public class RestServerResource {
         
    
 	@POST
-	@Path("/checkauthentication/")
+	@Path("/authentication/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response authenticateUser(User receivedUser) {
+	public Response checkUser(User receivedUser) {
 		Session userSession = new Session();
 		for(final User user : Users) {
 			if(user.username.equals(receivedUser.username)) {
@@ -129,7 +127,7 @@ public class RestServerResource {
 	@POST
 	@Path("/authorization/")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response authorizeUser(Authorization auth) {
+	public Response authorizeUserForDevice(Authorization auth) {
 		List<Device> UserBLEDevices = new ArrayList<Device>();
 		//User user = new User();
 		for(final User user : Users) {
@@ -154,25 +152,32 @@ public class RestServerResource {
     @Path("/deviceID")
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public Response updateDeviceID(Device device) {
-    	System.out.print("deviceID"+device.deviceID+device.username+"oldedeviceID"+device.oldDeviceID);
+    public Response updateDeviceID(Device ReveivedDevice) {
+    	System.out.print("deviceID"+ReveivedDevice.deviceID+ReveivedDevice.username+"oldedeviceID"+ReveivedDevice.oldDeviceID);
     	Device dev = new Device();
+    //	boolean existingDevice = false;
 		for(Device device1 : BLEDevices) {
 				//device1.deviceID = device.deviceID;    				
 				//key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
 				System.out.print("correct deviceID"+device1.deviceID);
 
 		}
-    	if(isLoggedIn(device.username)) {
-    		for(Device device1 : BLEDevices) {
-    			if(device1.deviceID.equals(device.oldDeviceID)){
-    				device1.deviceID = device.deviceID;    				
-    				key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-    				System.out.print("new value deviceID"+device1.deviceID);
+    	if(isLoggedIn(ReveivedDevice.username)) {
+    		for(Device bledevice : BLEDevices) {
+    			if(bledevice.deviceID.equals(ReveivedDevice.oldDeviceID)){
+    				bledevice.deviceID = ReveivedDevice.deviceID;    				
+    			//	existingDevice = true;
+    				key = bledevice.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+    				System.out.print("new value deviceID"+bledevice.deviceID);
     				break;
     			}
     		}
-        	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
+    		/*
+    		if(!existingDevice) {
+    			Device newDevice = new Device(ReveivedDevice.deviceID,"0000000000000000"); 
+    			BLEDevices.add(newDevice);
+    		}*/
+        	return  Response.ok(ReveivedDevice, MediaType.APPLICATION_JSON).build();
     	}else
         	return  Response.ok(dev, MediaType.APPLICATION_JSON).build();
     }
@@ -181,17 +186,25 @@ public class RestServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
     public Response updateKeyForDevice(Device device) {
-    	System.out.print("keys"+device.deviceID+device.username+device.key);    	
+    	System.out.print("keys"+device.deviceID+device.username+device.key);    
+    	//boolean existingDevice = false;
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.deviceID)){
     				//String k = new String(device.key,java.nio.charset.StandardCharsets.ISO_8859_1);
     				
     				device1.setKey(device.key);     		
+    		//		existingDevice = true;
     				System.out.print("new value key"+device1.key);
     				break;
     			}
-    		}    	
+    		}   
+    		/*
+    		if(!existingDevice) {
+    			Device newDevice = new Device("0000000000",device.key); 
+    			BLEDevices.add(newDevice);
+    			AssignededUserDevices.add(newDevice);
+    		}*/
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
     	}else {
         	Device dev = new Device();
@@ -216,21 +229,23 @@ public class RestServerResource {
     	if(isLoggedIn(data.username)) {
     		System.out.print("Token for authenticated users"+userSessionMap.size());
         	AES aesinstance = new AES();
-        	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-        	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	//byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	//byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
     	//	}		
 
-    		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+    		Token token = new Token();
     		//UserBLENonces.add(non);
             //generate session key and encrypt it with the shared symmetric key and send it back to client
             byte[] sessionkey = generateNonce();
             byte[] serverNonce = generateNonce();
             byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
-            byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
+            //byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
             token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
+            byte[] encryptedSNonce = aesinstance.encrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+            token.setSNonce(new String(encryptedSNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-            token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+            token.setEncryptedServerNonce(new String(aesinstance.encrypt(serverNonce,key),java.nio.charset.StandardCharsets.ISO_8859_1));
             //send the key to the gatt client            
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {

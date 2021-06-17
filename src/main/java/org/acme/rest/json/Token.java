@@ -62,6 +62,14 @@ public class Token extends JSONObject{
     public Token( String CNonce,  String SNonce) {
     	id = UUID.randomUUID();
         this.CNonce = CNonce;
-        this.SNonce = SNonce;
+        this.setSNonce(SNonce);
     }
+
+	public String getSNonce() {
+		return SNonce;
+	}
+
+	public void setSNonce(String sNonce) {
+		SNonce = sNonce;
+	}
 }
