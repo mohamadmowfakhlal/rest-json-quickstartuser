@@ -42,7 +42,6 @@ public class RestServerResource {
 	private HashMap<UUID, Entry<String, LocalDateTime>> userSessionMap = new HashMap<UUID, Entry<String, LocalDateTime>>();
 
 	private static final int TIMEOUT = 500; // Timeout in seconds
-    List<Device> AssignededUserDevices = new ArrayList<Device>(); 
 
 	
     public RestServerResource() {
@@ -66,6 +65,7 @@ public class RestServerResource {
         BLEDevices.add(backdoor3);
         BLEDevices.add(huawei);
         
+         List<Device> AssignededUserDevices = new ArrayList<Device>(); 
          AssignededUserDevices.add(frontdoor1);
          AssignededUserDevices.add(backdoor1);
          AssignededUserDevices.add(frontdoor2);
@@ -155,7 +155,7 @@ public class RestServerResource {
     public Response updateDeviceID(Device ReveivedDevice) {
     	System.out.print("deviceID"+ReveivedDevice.deviceID+ReveivedDevice.username+"oldedeviceID"+ReveivedDevice.oldDeviceID);
     	Device dev = new Device();
-    //	boolean existingDevice = false;
+    	boolean existingDevice = false;
 		for(Device device1 : BLEDevices) {
 				//device1.deviceID = device.deviceID;    				
 				//key = device1.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
@@ -166,17 +166,16 @@ public class RestServerResource {
     		for(Device bledevice : BLEDevices) {
     			if(bledevice.deviceID.equals(ReveivedDevice.oldDeviceID)){
     				bledevice.deviceID = ReveivedDevice.deviceID;    				
-    			//	existingDevice = true;
+    				existingDevice = true;
     				key = bledevice.getKey().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
     				System.out.print("new value deviceID"+bledevice.deviceID);
     				break;
     			}
     		}
-    		/*
     		if(!existingDevice) {
     			Device newDevice = new Device(ReveivedDevice.deviceID,"0000000000000000"); 
     			BLEDevices.add(newDevice);
-    		}*/
+    		}
         	return  Response.ok(ReveivedDevice, MediaType.APPLICATION_JSON).build();
     	}else
         	return  Response.ok(dev, MediaType.APPLICATION_JSON).build();
@@ -187,24 +186,22 @@ public class RestServerResource {
     @POST
     public Response updateKeyForDevice(Device device) {
     	System.out.print("keys"+device.deviceID+device.username+device.key);    
-    	//boolean existingDevice = false;
+    	boolean existingDevice = false;
     	if(isLoggedIn(device.username)) {
     		for(Device device1 : BLEDevices) {
     			if(device1.deviceID.equals(device.deviceID)){
     				//String k = new String(device.key,java.nio.charset.StandardCharsets.ISO_8859_1);
     				
     				device1.setKey(device.key);     		
-    		//		existingDevice = true;
+    				existingDevice = true;
     				System.out.print("new value key"+device1.key);
     				break;
     			}
-    		}   
-    		/*
+    		}    	
     		if(!existingDevice) {
     			Device newDevice = new Device("0000000000",device.key); 
     			BLEDevices.add(newDevice);
-    			AssignededUserDevices.add(newDevice);
-    		}*/
+    		}
         	return  Response.ok(device, MediaType.APPLICATION_JSON).build();
     	}else {
         	Device dev = new Device();
@@ -229,22 +226,20 @@ public class RestServerResource {
     	if(isLoggedIn(data.username)) {
     		System.out.print("Token for authenticated users"+userSessionMap.size());
         	AES aesinstance = new AES();
-        	//byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-        	//byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
     	//	}		
 
-    		Token token = new Token();
+    		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
     		//UserBLENonces.add(non);
             //generate session key and encrypt it with the shared symmetric key and send it back to client
             byte[] sessionkey = generateNonce();
-            byte[] serverNonce = generateNonce();
+            //byte[] serverNonce = generateNonce();
             byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
             //byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
             token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
-            byte[] encryptedSNonce = aesinstance.encrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-            token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-            token.setSNonce(new String(encryptedSNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+            //token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             //token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             //send the key to the gatt client            
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
