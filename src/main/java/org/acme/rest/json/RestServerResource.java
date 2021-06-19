@@ -229,23 +229,21 @@ public class RestServerResource {
     	if(isLoggedIn(data.username)) {
     		System.out.print("Token for authenticated users"+userSessionMap.size());
         	AES aesinstance = new AES();
-        	//byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-        	//byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	byte[] CNonce = aesinstance.decrypt(data.CNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
+        	byte[] SNonce = aesinstance.decrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
     	//	}		
 
-    		Token token = new Token();
+    		Token token = new Token(new String(CNonce,java.nio.charset.StandardCharsets.ISO_8859_1),new String(SNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
     		//UserBLENonces.add(non);
             //generate session key and encrypt it with the shared symmetric key and send it back to client
             byte[] sessionkey = generateNonce();
-            byte[] serverNonce = generateNonce();
+            //byte[] serverNonce = generateNonce();
             byte[] encryptedSessionKey = aesinstance.encrypt(sessionkey,key);
             //byte[] encryptedServerNonce = aesinstance.encrypt(serverNonce,key);
             token.setSessionKey(new String(sessionkey,java.nio.charset.StandardCharsets.ISO_8859_1));
             token.setEncryptedSessionKey(new String(encryptedSessionKey,java.nio.charset.StandardCharsets.ISO_8859_1));
-            byte[] encryptedSNonce = aesinstance.encrypt(data.SNonce.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1),key);
-            token.setSNonce(new String(encryptedSNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-            token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
-            token.setEncryptedServerNonce(new String(aesinstance.encrypt(serverNonce,key),java.nio.charset.StandardCharsets.ISO_8859_1));
+            //token.setServerNonce(new String(serverNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
+            //token.setEncryptedServerNonce(new String(encryptedServerNonce,java.nio.charset.StandardCharsets.ISO_8859_1));
             //send the key to the gatt client            
         	return  Response.ok(token, MediaType.APPLICATION_JSON).build();
     	}else {
